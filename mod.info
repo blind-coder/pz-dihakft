@@ -1,0 +1,4 @@
+name=Do I have a key for this?
+poster=empty.png
+description=Show a tooltip on knobs indicating if you own a key for it.
+id=doIHaveAKeyForThis
