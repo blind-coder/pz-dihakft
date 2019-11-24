@@ -30,13 +30,22 @@ end
 DIHAKFT.ISToolTipInvRender = ISToolTipInv.render;
 function ISToolTipInv:render()
 
+	if instanceof(self.item, "Key") then
+		local text = nil;
+		if self.item:getKeyId() ~= nil then
+			text = "KeyId:" .. tostring(self.item:getKeyId());
+		end
+		if text ~= nil then
+			self.item:setTooltip(text);
+		end
+	end
 	if self.item:getFullType() == "Base.Doorknob" then
 		local text = nil;
 		if self.item:getKeyId() ~= nil then
 			if getSpecificPlayer(0):getInventory():haveThisKeyId(self.item:getKeyId()) then
-				text = "You have a key for this knob.";
+				text = "You have a key for this knob. DoorId:" .. tostring(self.item:getKeyId());
 			else
-				text = "You don't have a key for this knob.";
+				text = "You don't have a key for this knob. DoorId:" .. tostring(self.item:getKeyId());
 			end
 		end
 		if text ~= nil then
