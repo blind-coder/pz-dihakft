@@ -1,6 +1,28 @@
 require 'ISUI/ISToolTipInv'
 
+local function BitAND(a,b)--Bitwise and
+	local p,c=1,0
+	while a>0 and b>0 do
+		local ra,rb=a%2,b%2
+		if ra+rb>1 then c=c+p end
+		a,b,p=(a-ra)/2,(b-rb)/2,p*2
+	end
+	return c
+end
+
 DIHAKFT = {};
+DIHAKFT.aan = function(text)
+	if string.sub(text, 1, 1) == "a" then return "an"; end
+	if string.sub(text, 1, 1) == "e" then return "an"; end
+	if string.sub(text, 1, 1) == "i" then return "an"; end
+	if string.sub(text, 1, 1) == "o" then return "an"; end
+	if string.sub(text, 1, 1) == "u" then return "an"; end
+	return "a";
+end
+
+DIHAKFT.low = {"long", "short", "wide", "broad", "lean", "worn", "ornate", "cheap", "black", "red", "white", "old", "modern", "classic", "slim", "narrow"};
+DIHAKFT.high = {"one notch and one tooth", "one notch and _2_ teeth", "_1_ notches and one tooth", "_1_ notches and _2_ teeth", "_1_ notches and _2_ teeth"}
+
 
 DIHAKFT.dump = function(o, lvl) -- {{{ Small function to dump an object.
   if lvl == nil then lvl = 5 end
@@ -27,13 +49,24 @@ DIHAKFT.pline = function (text) -- {{{ Print text to logfile
 end
 -- }}}
 
+DIHAKFT.ID2Text = function(id)
+	local highbits = BitAND(id, 65280);
+	local lowbits = BitAND(id, 255);
+	local text = DIHAKFT.low[lowbits % 16 + 1] .. " key with " .. DIHAKFT.high[highbits % 5 + 1];
+	text = string.gsub(text, "_1_", tostring(highbits % 4 + 2));
+	text = string.gsub(text, "_2_", tostring(highbits % 4 + 2));
+
+	return text;
+end
+
 DIHAKFT.ISToolTipInvRender = ISToolTipInv.render;
 function ISToolTipInv:render()
 
 	if instanceof(self.item, "Key") then
 		local text = nil;
 		if self.item:getKeyId() ~= nil then
-			text = "KeyId:" .. tostring(self.item:getKeyId());
+			text = DIHAKFT.ID2Text(self.item:getKeyId());
+			text = "This is " .. DIHAKFT.aan(text) .. " " .. text;
 		end
 		if text ~= nil then
 			self.item:setTooltip(text);
@@ -42,10 +75,11 @@ function ISToolTipInv:render()
 	if self.item:getFullType() == "Base.Doorknob" then
 		local text = nil;
 		if self.item:getKeyId() ~= nil then
+			text = DIHAKFT.ID2Text(self.item.getKeyId);
 			if getSpecificPlayer(0):getInventory():haveThisKeyId(self.item:getKeyId()) then
-				text = "You have a key for this knob. DoorId:" .. tostring(self.item:getKeyId());
+				text = "You have a key for this knob. It's " .. DIHAKFT.aan(text) .. " " .. text;
 			else
-				text = "You don't have a key for this knob. DoorId:" .. tostring(self.item:getKeyId());
+				text = "You don't have a key for this knob. It needs " .. DIHAKFT.aan(text) .. " " .. text;
 			end
 		end
 		if text ~= nil then
