@@ -50,6 +50,10 @@ end
 -- }}}
 
 DIHAKFT.ID2Text = function(id)
+	if id == -1 then
+		return "simple key"
+	end
+
 	local highbits = BitAND(id, 65280);
 	local lowbits = BitAND(id, 255);
 	local text = DIHAKFT.low[lowbits % 16 + 1] .. " key with " .. DIHAKFT.high[highbits % 5 + 1];
