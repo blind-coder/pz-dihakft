@@ -79,7 +79,7 @@ function ISToolTipInv:render()
 	if self.item:getFullType() == "Base.Doorknob" then
 		local text = nil;
 		if self.item:getKeyId() ~= nil then
-			text = DIHAKFT.ID2Text(self.item.getKeyId);
+			text = DIHAKFT.ID2Text(self.item:getKeyId());
 			if getSpecificPlayer(0):getInventory():haveThisKeyId(self.item:getKeyId()) then
 				text = "You have a key for this knob. It's " .. DIHAKFT.aan(text) .. " " .. text;
 			else
