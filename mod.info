@@ -3,6 +3,6 @@ poster=dihakft.png
 description=Show a tooltip on knobs indicating if you own a key for it.
 id=doIHaveAKeyForThis
 
-modversion=3.1.1
+modversion=3.1.2
 pzversion=32.20
 versionurl=https://raw.githubusercontent.com/blind-coder/pz-dihakft/master/mod.info
